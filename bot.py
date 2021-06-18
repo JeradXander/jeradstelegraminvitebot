@@ -19,40 +19,54 @@ def main():
 
     #creating telegram client
     client = TelegramClient('telegramsession', api_id, api_hash)
+    #calls the start function for the client
     client.start()
 
+    #gets input for the what group you want to invite to
     grp = str(input("Where do you wish to scrape members from? (e.g 't.me/name') "))
 
-    initial = int(input("Where do you wish to start? (e.g 23)"))
+    # input for the member index you want to start on
+    initialMember = int(input("Where do you wish to start? (e.g 23)"))
 
     async def start():
+        """this function is called to get info and start inviting"""
         
+        #gets the group entity object 
         group = await client.get_entity(grp)
+        
+        # gets the list of members in the selected group
         members = await client.get_participants(group) # Return all users and their information
 
-        channel = await client.get_entity('t.me/orionfinancial')
+        # this is the channel that you want to invite members to 
+        channel = await client.get_entity('t.me/helloworldinv')
         
         # t.client.send_message(client.me,"Yooooo")
+        # # await client.send_message("Jerad", f'{channel.title} Adding New Users')
+
+        #iterator 
+        numberOfInvitee = 0
         
+        #test prints
+        print(f"number of members {len(members)} pulled\n\n")
+        print(members[int(initialMember)])
 
-        # await client.send_message("Hutagg", f'{channel.title} Adding New Users')
-
-        n = 0
-
-        for user in members[int(initial)::]:
-            if n % 50 == 0 and n != 0:
+        #loop through members to invite
+        for user in members[int(initialMember)::]:
+            
+            #testing to see if we have already invited
+            if numberOfInvitee % 50 == 0 and numberOfInvitee != 0:
                 print("User Account Has Reach The Max Amount")
                 break
             elif user.bot == False:
                 try:
                     # users_to_add = await client.get_entity(str(user.username))
-                    time.sleep(30)
+                    time.sleep(10)
                     await client(InviteToChannelRequest(
                         channel,
                         [user]
                     ))
-                    print(f"Added - {user.id} to {channel}")
-                    n += 1
+                    print(f"""Added {numberOfInvitee} - {user.id} to {channel.title}""")
+                    numberOfInvitee += 1
 
                     # await client.send_message("Hutagg", f"Added {user.username} -- {members.index(user)}")
                     time.sleep(random.randrange(3, 8))                
@@ -68,7 +82,7 @@ def main():
                     time.sleep(1)
 
                 except PeerFloodError:
-                    print("Adding was flagged and stopped by Telegram")
+                    print("Adding was flagged and stopped by Telegram ABORT!!!")
                     time.sleep(30)
                     break
 
