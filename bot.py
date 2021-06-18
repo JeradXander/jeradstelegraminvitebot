@@ -68,7 +68,6 @@ def main():
                     print(f"""Added {numberOfInvitee} - {user.id} to {channel.title}""")
                     numberOfInvitee += 1
 
-                    # await client.send_message("Hutagg", f"Added {user.username} -- {members.index(user)}")
                     time.sleep(random.randrange(3, 8))                
 
                 except UserPrivacyRestrictedError:
@@ -78,12 +77,12 @@ def main():
                     time.sleep(3)
 
                 except UserChannelsTooMuchError:
-                    print("There is an error to handle!")
+                    print("There is an error for handling to much!")
                     time.sleep(1)
 
                 except PeerFloodError:
                     print("Adding was flagged and stopped by Telegram ABORT!!!")
-                    time.sleep(30)
+                    time.sleep(5)
                     break
 
                 except Exception as e:
